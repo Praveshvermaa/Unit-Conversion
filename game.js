@@ -492,9 +492,11 @@ const DOM = {
   progressText:  $('progress-text'),
   starTotal:     $('star-total'),
 
+  // Activity
+  activityTitle: $('activity-title'),
+
   // Question
   questionText:  $('question-text'),
-  questionInstructions: $('question-instructions'),
   difficultyBadge: $('difficulty-badge'),
   guideAvatar:   $('guide-avatar'),
 
@@ -505,16 +507,19 @@ const DOM = {
   rulerMarker:    $('ruler-marker'),
   rulerValue:     $('ruler-value'),
   rulerUnitLabel: $('ruler-unit-label'),
+  rulerHint:      $('ruler-hint'),
   rulerCorrectMarker: $('ruler-correct-marker'),
   rulerFill:      $('ruler-fill'),
 
   // Scale
   scaleContainer:    $('scale-container'),
   scaleValueDisplay: $('scale-value-display'),
+  scaleHint:         $('scale-hint'),
   scaleBeam:         $('scale-beam'),
   leftPanItems:      $('left-pan-items'),
   leftPanLabel:      $('left-pan-label'),
   rightPanItems:     $('right-pan-items'),
+  correctPanItems:   $('correct-pan-items'),
   rightPanLabel:     $('right-pan-label'),
   totalGrams:        $('total-grams'),
   weightChips:       $('weight-chips'),
@@ -580,19 +585,20 @@ function startLevel(level) {
   // Setup UI
   DOM.gameScreen.className = `screen active ${level === 2 ? 'level-2' : ''}`;
   DOM.levelLabel.textContent = level === 1 ? 'Level 1: Length' : 'Level 2: Weight';
+  DOM.activityTitle.textContent = level === 1 ? 'Length Conversion Challenge' : 'Weight Balance Challenge';
 
   // Show/hide weight controls
   const undoBtn = $('btn-undo-weight');
+  const hintBtn = $('btn-hint');
   if (undoBtn) undoBtn.style.display = level === 2 ? '' : 'none';
+  if (hintBtn) hintBtn.style.display = '';
 
   if (level === 1) {
     DOM.rulerContainer.style.display = 'flex';
     DOM.scaleContainer.style.display = 'none';
-    DOM.questionInstructions.classList.add('visible');
   } else {
     DOM.rulerContainer.style.display = 'none';
     DOM.scaleContainer.style.display = 'flex';
-    DOM.questionInstructions.classList.remove('visible');
   }
 
   showScreen('game-screen');
@@ -648,6 +654,8 @@ function setupRuler(q) {
   DOM.rulerMarker.style.display = 'block';
   DOM.rulerMarker.classList.remove('snapping');
   DOM.rulerCorrectMarker.style.display = 'none';
+  DOM.rulerHint.classList.remove('visible');
+  DOM.rulerHint.textContent = '';
   DOM.rulerFill.style.width = '0%';
   DOM.rulerFill.style.transition = 'none';
   DOM.rulerValue.textContent = '↕ Drag the marker!';
@@ -675,9 +683,12 @@ function setupRuler(q) {
   const numMajorTicks = range / step;
 
   // Decide label interval (to avoid crowding)
+  const isMobile = window.innerWidth <= 480;
   let labelEvery = 1;
   if (numMajorTicks > 15) labelEvery = 5;
   else if (numMajorTicks > 10) labelEvery = 2;
+  if (isMobile && numMajorTicks > 8) labelEvery = Math.max(labelEvery, 2);
+  if (isMobile && numMajorTicks > 12) labelEvery = Math.max(labelEvery, 5);
 
   // Generate ticks
   for (let i = 0; i <= totalSubTicks; i++) {
@@ -714,6 +725,7 @@ function setupRuler(q) {
 
   // Unit label
   DOM.rulerUnitLabel.textContent = '📏 Scale: ' + (UNIT_FULL_NAMES[q.scaleUnit] || q.scaleUnit);
+  DOM.rulerHint.textContent = 'Hint: ' + (q.conversionRule || q.hint);
 
   // Remove old listeners then add new
   if (DOM.rulerTrack._cleanup) DOM.rulerTrack._cleanup();
@@ -745,6 +757,8 @@ function setupRuler(q) {
     const pct = ((val - q.rulerMin) / range) * 100;
     DOM.rulerMarker.style.left = pct + '%';
     DOM.rulerMarker.style.display = 'block';
+    DOM.rulerFill.style.transition = 'width 0.12s ease';
+    DOM.rulerFill.style.width = pct + '%';
     DOM.rulerMarker.classList.add('snapping');
     setTimeout(() => DOM.rulerMarker.classList.remove('snapping'), 200);
 
@@ -759,6 +773,7 @@ function setupRuler(q) {
 
   function onStart(e) {
     e.preventDefault();
+    e.stopPropagation();
     dragging = true;
     placeMarker(getValueFromEvent(e));
   }
@@ -772,17 +787,21 @@ function setupRuler(q) {
   function onEnd() { dragging = false; }
 
   DOM.rulerTrack.addEventListener('mousedown', onStart);
+  DOM.rulerMarker.addEventListener('mousedown', onStart);
   document.addEventListener('mousemove', onMove);
   document.addEventListener('mouseup', onEnd);
   DOM.rulerTrack.addEventListener('touchstart', onStart, { passive: false });
+  DOM.rulerMarker.addEventListener('touchstart', onStart, { passive: false });
   document.addEventListener('touchmove', onMove, { passive: false });
   document.addEventListener('touchend', onEnd);
 
   DOM.rulerTrack._cleanup = () => {
     DOM.rulerTrack.removeEventListener('mousedown', onStart);
+    DOM.rulerMarker.removeEventListener('mousedown', onStart);
     document.removeEventListener('mousemove', onMove);
     document.removeEventListener('mouseup', onEnd);
     DOM.rulerTrack.removeEventListener('touchstart', onStart);
+    DOM.rulerMarker.removeEventListener('touchstart', onStart);
     document.removeEventListener('touchmove', onMove);
     document.removeEventListener('touchend', onEnd);
   };
@@ -800,8 +819,13 @@ function setupScale(q) {
   });
 
   DOM.scaleValueDisplay.textContent = 'Add weights to match!';
+  DOM.scaleHint.classList.remove('visible');
+  DOM.scaleHint.textContent = 'Hint: ' + (q.conversionRule || q.hint);
   DOM.totalGrams.textContent = '0 ' + su;
   DOM.rightPanItems.innerHTML = '';
+  DOM.correctPanItems.innerHTML = '';
+  DOM.correctPanItems.classList.remove('visible');
+  DOM.rightPan.classList.remove('show-correct');
   DOM.rightPanLabel.textContent = 'Your weights: 0 ' + su;
 
   // Left pan - target
@@ -844,6 +868,9 @@ function updateWeightUI() {
 
   DOM.totalGrams.textContent = State.totalWeight + ' ' + su;
   DOM.rightPanLabel.textContent = 'Your weights: ' + State.totalWeight + ' ' + su;
+  DOM.correctPanItems.innerHTML = '';
+  DOM.correctPanItems.classList.remove('visible');
+  DOM.rightPan.classList.remove('show-correct');
   DOM.scaleValueDisplay.textContent = State.totalWeight > 0
     ? State.totalWeight + ' ' + su
     : 'Add weights to match!';
@@ -854,24 +881,13 @@ function updateWeightUI() {
   const counts = {};
   State.addedWeights.forEach(w => { counts[w] = (counts[w] || 0) + 1; });
 
-  let iconCount = 0;
   Object.entries(counts).sort((a, b) => b[0] - a[0]).forEach(([w, c]) => {
-    for (let i = 0; i < Math.min(c, 5) && iconCount < 12; i++) {
+    for (let i = 0; i < c; i++) {
       const span = document.createElement('span');
       span.className = 'pan-item';
       span.textContent = iconMap[w] || '📦';
       span.title = w + ' ' + su;
       DOM.rightPanItems.appendChild(span);
-      iconCount++;
-    }
-    if (c > 5 && iconCount < 12) {
-      const extra = document.createElement('span');
-      extra.className = 'pan-item';
-      extra.textContent = `+${c - 5}`;
-      extra.style.fontSize = '0.8rem';
-      extra.style.fontWeight = '800';
-      DOM.rightPanItems.appendChild(extra);
-      iconCount++;
     }
   });
 
@@ -891,12 +907,38 @@ function updateBeamTilt() {
 
   DOM.scaleBeam.style.transform = `translateX(-50%) rotate(${tiltDeg}deg)`;
   const panOffset = tiltDeg * 2;
-  DOM.leftPan.style.transform = `translateY(${-panOffset}px)`;
-  DOM.rightPan.style.transform = `translateY(${panOffset}px)`;
+  DOM.leftPan.style.transform = `translateY(${-panOffset}px) rotate(${tiltDeg}deg)`;
+  DOM.rightPan.style.transform = `translateY(${panOffset}px) rotate(${tiltDeg}deg)`;
 }
 
 
 // ─── SUBMIT ANSWER ───────────────────────────────────────
+function showCorrectWeightPreview(q) {
+  const su = q.scaleUnit || 'g';
+  const iconMap = { 1: '🪙', 5: '🫙', 10: '🍬', 50: '🍎', 100: '🧱', 500: '🏋️' };
+  const availableWeights = [500, 100, 50, 10, 5, 1];
+  let remaining = q.answer;
+
+  DOM.correctPanItems.innerHTML = '';
+
+  availableWeights.forEach(w => {
+    const count = Math.floor(remaining / w);
+    remaining -= count * w;
+
+    for (let i = 0; i < count; i++) {
+      const span = document.createElement('span');
+      span.className = 'pan-item correct-preview-item';
+      span.textContent = iconMap[w] || '📦';
+      span.title = w + ' ' + su;
+      span.style.animationDelay = (DOM.correctPanItems.children.length * 0.08) + 's';
+      DOM.correctPanItems.appendChild(span);
+    }
+  });
+
+  DOM.rightPan.classList.add('show-correct');
+  DOM.correctPanItems.classList.add('visible');
+}
+
 function submitAnswer() {
   const q = State.questions[State.questionIndex];
   if (!q) return;
@@ -909,7 +951,7 @@ function submitAnswer() {
       DOM.rulerTrack.classList.add('shake-wrong');
       setTimeout(() => DOM.rulerTrack.classList.remove('shake-wrong'), 500);
       DOM.guideAvatar.textContent = '🤔';
-      DOM.rulerValue.textContent = '⬆️ Click on the ruler first!';
+      DOM.rulerValue.textContent = '⬆️ Drag the marker first!';
       return;
     }
     playerAnswer = State.markerValue;
@@ -971,8 +1013,8 @@ function handleCorrectAnswer(q) {
   } else {
     DOM.scaleValueDisplay.textContent = '✅ ' + q.answer + ' ' + q.scaleUnit + ' — Balanced!';
     DOM.scaleBeam.style.transform = 'translateX(-50%) rotate(0deg)';
-    DOM.leftPan.style.transform = 'translateY(0)';
-    DOM.rightPan.style.transform = 'translateY(0)';
+    DOM.leftPan.style.transform = 'translateY(0) rotate(0deg)';
+    DOM.rightPan.style.transform = 'translateY(0) rotate(0deg)';
     DOM.scaleArea.classList.add('glow-correct');
     setTimeout(() => DOM.scaleArea.classList.remove('glow-correct'), 1500);
   }
@@ -1002,14 +1044,11 @@ function handleWrongAnswer(q, playerAnswer) {
   // Highlight the correct answer on the scale visually
   showCorrectOnScale(q);
 
-  if (State.attempts >= 3) {
-    // After 3 wrong attempts, consider the question complete
-    showLearningPanel(q);
-    showFeedback(false, 0, q, true);
+  if (State.level === 1) {
+    DOM.rulerValue.textContent = '❌ Wrong answer';
+    DOM.rulerValue.style.color = 'var(--error)';
   } else {
-    // Show learning panel, let them retry
-    showLearningPanel(q);
-    showFeedback(false, 0, q, false);
+    DOM.scaleValueDisplay.textContent = '❌ Wrong answer';
   }
 }
 
@@ -1030,9 +1069,10 @@ function showCorrectOnScale(q) {
     DOM.rulerValue.style.color = 'var(--success)';
   } else {
     DOM.scaleValueDisplay.textContent = '✅ Correct: ' + q.answer + ' ' + q.scaleUnit;
+    showCorrectWeightPreview(q);
     DOM.scaleBeam.style.transform = 'translateX(-50%) rotate(0deg)';
-    DOM.leftPan.style.transform = 'translateY(0)';
-    DOM.rightPan.style.transform = 'translateY(0)';
+    DOM.leftPan.style.transform = 'translateY(0) rotate(0deg)';
+    DOM.rightPan.style.transform = 'translateY(0) rotate(0deg)';
   }
 }
 
@@ -1143,10 +1183,12 @@ function resetQuestion() {
   if (State.level === 1) {
     State.markerValue = null;
     State.markerPlaced = false;
+    State.hintUsed = false;
     DOM.rulerMarker.style.left = '0%';
     DOM.rulerMarker.style.display = 'block';
     DOM.rulerMarker.classList.remove('snapping');
     DOM.rulerCorrectMarker.style.display = 'none';
+    DOM.rulerHint.classList.remove('visible');
     DOM.rulerFill.style.transition = 'none';
     DOM.rulerFill.style.width = '0%';
     DOM.rulerValue.textContent = '↕ Drag the marker!';
@@ -1154,10 +1196,27 @@ function resetQuestion() {
   } else {
     clearWeights();
     DOM.scaleValueDisplay.textContent = 'Add weights to match!';
+    DOM.scaleHint.classList.remove('visible');
   }
 
   DOM.scaleArea.classList.remove('glow-correct', 'shake-wrong');
   DOM.guideAvatar.textContent = '🤖';
+  SoundEngine.click();
+}
+
+function showHint() {
+  const q = State.questions[State.questionIndex];
+  if (!q) return;
+
+  State.hintUsed = true;
+  const hintText = 'Hint: ' + (q.conversionRule || q.hint);
+  if (State.level === 1) {
+    DOM.rulerHint.textContent = hintText;
+    DOM.rulerHint.classList.add('visible');
+  } else {
+    DOM.scaleHint.textContent = hintText;
+    DOM.scaleHint.classList.add('visible');
+  }
   SoundEngine.click();
 }
 
@@ -1272,6 +1331,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Controls
   $('btn-submit').addEventListener('click', submitAnswer);
   $('btn-reset').addEventListener('click', resetQuestion);
+  $('btn-hint').addEventListener('click', showHint);
 
   // Feedback
   $('btn-next').addEventListener('click', closeFeedback);

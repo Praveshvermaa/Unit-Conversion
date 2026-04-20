@@ -82,6 +82,8 @@
 
     <!-- Main Game Area -->
     <div class="game-main">
+      <div class="activity-title" id="activity-title">Length Conversion</div>
+
       <!-- Question Panel -->
       <div class="question-panel" id="question-panel">
         <div class="guide-avatar" id="guide-avatar">🤖</div>
@@ -89,12 +91,6 @@
           <h2 id="question-text">Loading question...</h2>
         </div>
         <span class="difficulty-badge" id="difficulty-badge">Easy</span>
-      </div>
-
-      <!-- Instruction Section -->
-      <div class="question-instructions" id="question-instructions">
-        <div class="instruction-badge">Step 1: mark right answer</div>
-        <div class="instruction-badge">Step 2: click on submit</div>
       </div>
 
       <!-- Scale Area -->
@@ -116,11 +112,13 @@
             </div>
           </div>
           <div class="ruler-unit-label" id="ruler-unit-label">📏 Scale: centimeters (cm)</div>
+          <div class="ruler-hint" id="ruler-hint"></div>
         </div>
 
         <!-- BALANCE SCALE (Level 2) -->
         <div class="scale-container" id="scale-container" style="display:none;">
           <div class="scale-value-display" id="scale-value-display">Add weights to the scale!</div>
+          <div class="scale-hint" id="scale-hint"></div>
           <div class="balance-scale" id="balance-scale">
             <!-- Stand -->
             <div class="scale-stand">
@@ -143,6 +141,7 @@
               <div class="pan-string"></div>
               <div class="pan-dish">
                 <div class="pan-items" id="right-pan-items"></div>
+                <div class="correct-pan-items" id="correct-pan-items"></div>
                 <div class="pan-label" id="right-pan-label">Your weights: 0 g</div>
               </div>
             </div>
@@ -184,6 +183,7 @@
         <!-- Controls -->
         <div class="controls-bar">
           <button class="btn btn-reset" id="btn-reset">🔄 Reset</button>
+          <button class="btn btn-hint" id="btn-hint" style="display:none;">💡 Hint</button>
           <button class="btn btn-undo" id="btn-undo-weight" style="display:none;">↩ Undo</button>
           <button class="btn btn-submit" id="btn-submit">✅ Submit</button>
         </div>
