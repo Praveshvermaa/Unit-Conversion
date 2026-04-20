@@ -1614,8 +1614,8 @@ body::after {
   .level-label { font-size: 0.9rem; }
   .progress-track { width: 110px; }
   .game-main {
-    padding: 10px 10px calc(86px + env(safe-area-inset-bottom));
-    gap: 10px;
+    padding: 14px 12px calc(96px + env(safe-area-inset-bottom));
+    gap: 14px;
     max-width: 100%;
   }
   .activity-title {
@@ -1645,7 +1645,7 @@ body::after {
     font-size: 0.65rem;
   }
   .scale-area {
-    padding: 12px 10px;
+    padding: 16px 12px;
     min-height: auto;
     border-radius: var(--radius-lg);
     overflow: visible;
@@ -1658,6 +1658,15 @@ body::after {
   .scale-value-display {
     min-height: 40px;
     font-size: 1.45rem;
+    align-self: stretch;
+    margin-bottom: 8px;
+    padding: 6px 10px;
+    background: rgba(255,255,255,0.92);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+  }
+  .ruler-value-display {
+    margin-bottom: 18px;
   }
   .ruler-track-wrapper {
     padding: 34px 8px 0;
@@ -1700,16 +1709,16 @@ body::after {
     padding: 8px 14px;
   }
   .weight-chips {
-    width: calc(100vw - 20px);
+    width: calc(100vw - 24px);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 8px;
-    padding: 10px;
+    gap: 10px;
+    padding: 12px;
     overflow: visible;
   }
   .weight-chip {
-    flex: 0 1 calc(33.333% - 8px);
+    flex: 0 1 calc(33.333% - 10px);
     min-width: 74px;
     min-height: 54px;
     padding: 8px 12px;
@@ -1722,8 +1731,8 @@ body::after {
     bottom: 0;
     z-index: 40;
     flex-wrap: nowrap;
-    gap: 8px;
-    padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
+    gap: 10px;
+    padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
     background: rgba(255,255,255,0.96);
     box-shadow: 0 -6px 20px rgba(0,0,0,0.12);
   }
@@ -1764,6 +1773,10 @@ body::after {
   .activity-title { font-size: 0.94rem; }
   .ruler-value-display,
   .scale-value-display { font-size: 1.25rem; }
+  .ruler-value-display {
+    min-height: 50px;
+    margin-bottom: 24px;
+  }
   .ruler-track { height: 60px; }
   .ruler-tick.major { height: 35px; }
   .ruler-tick.minor { height: 18px; }
@@ -1787,10 +1800,10 @@ body::after {
     font-size: 0.72rem;
     padding: 2px 7px;
   }
-  .weight-chips { gap: 6px; }
-  .weight-chip { flex-basis: calc(33.333% - 6px); min-width: 66px; padding: 8px 10px; }
+  .weight-chips { gap: 8px; padding: 10px; }
+  .weight-chip { flex-basis: calc(33.333% - 8px); min-width: 66px; padding: 9px 10px; }
   .weight-chip .chip-value { font-size: 0.72rem; }
-  .controls-bar { gap: 6px; padding: 8px 8px calc(8px + env(safe-area-inset-bottom)); }
+  .controls-bar { gap: 8px; padding: 10px 10px calc(10px + env(safe-area-inset-bottom)); }
   .btn { min-height: 44px; font-size: 0.82rem; padding: 8px 9px; }
   .btn-submit { font-size: 0.92rem; }
   .feedback-card {

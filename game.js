@@ -819,6 +819,7 @@ function setupScale(q) {
   });
 
   DOM.scaleValueDisplay.textContent = 'Add weights to match!';
+  DOM.scaleValueDisplay.style.color = 'var(--primary)';
   DOM.scaleHint.classList.remove('visible');
   DOM.scaleHint.textContent = 'Hint: ' + (q.conversionRule || q.hint);
   DOM.totalGrams.textContent = '0 ' + su;
@@ -871,6 +872,7 @@ function updateWeightUI() {
   DOM.correctPanItems.innerHTML = '';
   DOM.correctPanItems.classList.remove('visible');
   DOM.rightPan.classList.remove('show-correct');
+  DOM.scaleValueDisplay.style.color = 'var(--primary)';
   DOM.scaleValueDisplay.textContent = State.totalWeight > 0
     ? State.totalWeight + ' ' + su
     : 'Add weights to match!';
@@ -960,8 +962,8 @@ function submitAnswer() {
     isCorrect = Math.abs(playerAnswer - q.answer) <= tol;
   } else {
     if (State.totalWeight === 0) {
-      DOM.scaleArea.classList.add('shake-wrong');
-      setTimeout(() => DOM.scaleArea.classList.remove('shake-wrong'), 500);
+      DOM.scaleContainer.classList.add('shake-wrong');
+      setTimeout(() => DOM.scaleContainer.classList.remove('shake-wrong'), 500);
       DOM.guideAvatar.textContent = '🤔';
       return;
     }
@@ -1012,6 +1014,7 @@ function handleCorrectAnswer(q) {
     setTimeout(() => DOM.scaleArea.classList.remove('glow-correct'), 1500);
   } else {
     DOM.scaleValueDisplay.textContent = '✅ ' + q.answer + ' ' + q.scaleUnit + ' — Balanced!';
+    DOM.scaleValueDisplay.style.color = 'var(--success)';
     DOM.scaleBeam.style.transform = 'translateX(-50%) rotate(0deg)';
     DOM.leftPan.style.transform = 'translateY(0) rotate(0deg)';
     DOM.rightPan.style.transform = 'translateY(0) rotate(0deg)';
@@ -1036,9 +1039,10 @@ function handleWrongAnswer(q, playerAnswer) {
     DOM.rulerValue.textContent = '❌ ' + formatValue(playerAnswer, q.scaleUnit) + ' — not quite!';
     DOM.rulerValue.style.color = 'var(--error)';
   } else {
-    DOM.scaleArea.classList.add('shake-wrong');
-    setTimeout(() => DOM.scaleArea.classList.remove('shake-wrong'), 500);
+    DOM.scaleContainer.classList.add('shake-wrong');
+    setTimeout(() => DOM.scaleContainer.classList.remove('shake-wrong'), 500);
     DOM.scaleValueDisplay.textContent = '❌ ' + playerAnswer + ' ' + q.scaleUnit + ' — not quite!';
+    DOM.scaleValueDisplay.style.color = 'var(--error)';
   }
 
   // Highlight the correct answer on the scale visually
@@ -1049,6 +1053,7 @@ function handleWrongAnswer(q, playerAnswer) {
     DOM.rulerValue.style.color = 'var(--error)';
   } else {
     DOM.scaleValueDisplay.textContent = '❌ Wrong answer';
+    DOM.scaleValueDisplay.style.color = 'var(--error)';
   }
 }
 
@@ -1196,6 +1201,7 @@ function resetQuestion() {
   } else {
     clearWeights();
     DOM.scaleValueDisplay.textContent = 'Add weights to match!';
+    DOM.scaleValueDisplay.style.color = 'var(--primary)';
     DOM.scaleHint.classList.remove('visible');
   }
 
