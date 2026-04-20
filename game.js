@@ -25,26 +25,26 @@ const SoundEngine = (() => {
       gain.connect(c.destination);
       osc.start(c.currentTime);
       osc.stop(c.currentTime + duration);
-    } catch (_) {}
+    } catch (_) { }
   }
 
   return {
-    tick()    { playTone(1200, 0.05, 'square', 0.06); },
-    click()   { playTone(800, 0.08, 'sine', 0.1); },
-    pop()     { playTone(600, 0.12, 'sine', 0.15); playTone(900, 0.12, 'sine', 0.1); },
+    tick() { playTone(1200, 0.05, 'square', 0.06); },
+    click() { playTone(800, 0.08, 'sine', 0.1); },
+    pop() { playTone(600, 0.12, 'sine', 0.15); playTone(900, 0.12, 'sine', 0.1); },
     correct() {
       [523, 659, 784, 1047].forEach((f, i) =>
         setTimeout(() => playTone(f, 0.2, 'sine', 0.12), i * 100)
       );
     },
-    wrong()   { playTone(300, 0.3, 'sawtooth', 0.08); playTone(200, 0.4, 'sawtooth', 0.06); },
-    addWeight()  { playTone(500, 0.1, 'triangle', 0.12); },
-    balance()    {
+    wrong() { playTone(300, 0.3, 'sawtooth', 0.08); playTone(200, 0.4, 'sawtooth', 0.06); },
+    addWeight() { playTone(500, 0.1, 'triangle', 0.12); },
+    balance() {
       [400, 500, 600, 800].forEach((f, i) =>
         setTimeout(() => playTone(f, 0.25, 'sine', 0.1), i * 120)
       );
     },
-    badge()   {
+    badge() {
       [523, 659, 784, 1047, 1319].forEach((f, i) =>
         setTimeout(() => playTone(f, 0.15, 'sine', 0.1), i * 80)
       );
@@ -68,7 +68,7 @@ const Confetti = (() => {
   window.addEventListener('resize', resize);
   resize();
 
-  const COLORS = ['#FF6B6B','#FFD93D','#6BCB77','#4D96FF','#FF6B9D','#C084FC','#FFA07A','#20B2AA'];
+  const COLORS = ['#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF', '#FF6B9D', '#C084FC', '#FFA07A', '#20B2AA'];
 
   function create(count = 100) {
     particles = [];
@@ -480,77 +480,73 @@ const State = {
 const $ = id => document.getElementById(id);
 
 const DOM = {
-  welcomeScreen:   $('welcome-screen'),
-  gameScreen:      $('game-screen'),
-  resultsScreen:   $('results-screen'),
+  welcomeScreen: $('welcome-screen'),
+  gameScreen: $('game-screen'),
+  resultsScreen: $('results-screen'),
   feedbackOverlay: $('feedback-overlay'),
-  feedbackCard:    $('feedback-card'),
+  feedbackCard: $('feedback-card'),
 
   // Top bar
-  levelLabel:    $('level-label'),
-  progressFill:  $('progress-fill'),
-  progressText:  $('progress-text'),
-  starTotal:     $('star-total'),
+  levelLabel: $('level-label'),
 
   // Activity
   activityTitle: $('activity-title'),
 
   // Question
-  questionText:  $('question-text'),
+  questionText: $('question-text'),
   difficultyBadge: $('difficulty-badge'),
-  guideAvatar:   $('guide-avatar'),
+  guideAvatar: $('guide-avatar'),
+
+  btnHintToggle: $('btn-hint-toggle'),
 
   // Ruler
   rulerContainer: $('ruler-container'),
-  rulerTrack:     $('ruler-track'),
-  rulerTicks:     $('ruler-ticks'),
-  rulerMarker:    $('ruler-marker'),
-  rulerValue:     $('ruler-value'),
+  rulerTrack: $('ruler-track'),
+  rulerTicks: $('ruler-ticks'),
+  rulerMarker: $('ruler-marker'),
+  rulerValue: $('ruler-value'),
   rulerUnitLabel: $('ruler-unit-label'),
-  rulerHint:      $('ruler-hint'),
+  rulerWrongMarker: $('ruler-wrong-marker'),
   rulerCorrectMarker: $('ruler-correct-marker'),
-  rulerFill:      $('ruler-fill'),
+  rulerFill: $('ruler-fill'),
 
   // Scale
-  scaleContainer:    $('scale-container'),
+  scaleContainer: $('scale-container'),
   scaleValueDisplay: $('scale-value-display'),
-  scaleHint:         $('scale-hint'),
-  scaleBeam:         $('scale-beam'),
-  leftPanItems:      $('left-pan-items'),
-  leftPanLabel:      $('left-pan-label'),
-  rightPanItems:     $('right-pan-items'),
-  correctPanItems:   $('correct-pan-items'),
-  rightPanLabel:     $('right-pan-label'),
-  totalGrams:        $('total-grams'),
-  weightChips:       $('weight-chips'),
-  leftPan:           $('left-pan'),
-  rightPan:          $('right-pan'),
+  scaleBeam: $('scale-beam'),
+  leftPanItems: $('left-pan-items'),
+  leftPanLabel: $('left-pan-label'),
+  rightPanItems: $('right-pan-items'),
+  correctPanItems: $('correct-pan-items'),
+  rightPanLabel: $('right-pan-label'),
+  totalGrams: $('total-grams'),
+  weightChips: $('weight-chips'),
+  leftPan: $('left-pan'),
+  rightPan: $('right-pan'),
 
   // Learning
   learningPanel: $('learning-panel'),
-  learnText:     $('learn-text'),
-  learnVisual:   $('learn-visual'),
+  learnText: $('learn-text'),
+  learnVisual: $('learn-visual'),
 
   // Feedback
-  feedbackIcon:    $('feedback-icon'),
-  feedbackTitle:   $('feedback-title'),
+  feedbackIcon: $('feedback-icon'),
+  feedbackTitle: $('feedback-title'),
   feedbackMessage: $('feedback-message'),
-  feedbackStars:   $('feedback-stars'),
   feedbackExplanation: $('feedback-explanation'),
   feedbackExpText: $('feedback-exp-text'),
 
   // Results
-  resultsTrophy:   $('results-trophy'),
-  resultsTitle:    $('results-title'),
+  resultsTrophy: $('results-trophy'),
+  resultsTitle: $('results-title'),
   resultsSubtitle: $('results-subtitle'),
-  statCorrect:     $('stat-correct'),
-  statTotalStars:  $('stat-total-stars'),
-  statAccuracy:    $('stat-accuracy'),
-  resultsStars:    $('results-stars'),
-  badgesGrid:      $('badges-grid'),
-  badgesSection:   $('badges-section'),
+  statCorrect: $('stat-correct'),
+  statAccuracy: $('stat-accuracy'),
+  badgesGrid: $('badges-grid'),
+  badgesSection: $('badges-section'),
 
-  scaleArea: $('scale-area')
+  scaleArea: $('scale-area'),
+  hintTooltip: $('hint-tooltip')
 };
 
 
@@ -631,13 +627,6 @@ function loadQuestion() {
   // Guide reaction
   DOM.guideAvatar.textContent = '🤖';
 
-  // Progress
-  const total = State.questions.length;
-  const pct = (State.questionIndex / total) * 100;
-  DOM.progressFill.style.width = pct + '%';
-  DOM.progressText.textContent = `${State.questionIndex + 1} / ${total}`;
-  DOM.starTotal.textContent = State.totalStars;
-
   // Setup the appropriate scale
   if (State.level === 1) {
     setupRuler(q);
@@ -653,10 +642,14 @@ function setupRuler(q) {
   DOM.rulerMarker.style.left = '0%';
   DOM.rulerMarker.style.display = 'block';
   DOM.rulerMarker.classList.remove('snapping');
+  DOM.rulerWrongMarker.style.display = 'none';
   DOM.rulerCorrectMarker.style.display = 'none';
-  DOM.rulerHint.classList.remove('visible');
-  DOM.rulerHint.textContent = '';
+  if (DOM.hintTooltip) {
+    DOM.hintTooltip.classList.remove('visible');
+    DOM.hintTooltip.textContent = '';
+  }
   DOM.rulerFill.style.width = '0%';
+  DOM.rulerFill.classList.remove('correct');
   DOM.rulerFill.style.transition = 'none';
   DOM.rulerValue.textContent = '↕ Drag the marker!';
   DOM.rulerValue.style.color = 'var(--primary)';
@@ -704,7 +697,7 @@ function setupRuler(q) {
     // Mid tick (halfway between majors)
     const distFromHalf = (val - q.rulerMin) % (step / 2);
     const isMid = !isMajor && step >= 4 &&
-      (Math.abs(distFromHalf) < 0.0001 || Math.abs(distFromHalf - step/2) < 0.0001);
+      (Math.abs(distFromHalf) < 0.0001 || Math.abs(distFromHalf - step / 2) < 0.0001);
 
     tick.className = `ruler-tick ${isMajor ? 'major' : isMid ? 'mid' : 'minor'}`;
     tick.style.left = pct + '%';
@@ -725,7 +718,6 @@ function setupRuler(q) {
 
   // Unit label
   DOM.rulerUnitLabel.textContent = '📏 Scale: ' + (UNIT_FULL_NAMES[q.scaleUnit] || q.scaleUnit);
-  DOM.rulerHint.textContent = 'Hint: ' + (q.conversionRule || q.hint);
 
   // Remove old listeners then add new
   if (DOM.rulerTrack._cleanup) DOM.rulerTrack._cleanup();
@@ -820,8 +812,10 @@ function setupScale(q) {
 
   DOM.scaleValueDisplay.textContent = 'Add weights to match!';
   DOM.scaleValueDisplay.style.color = 'var(--primary)';
-  DOM.scaleHint.classList.remove('visible');
-  DOM.scaleHint.textContent = 'Hint: ' + (q.conversionRule || q.hint);
+  if (DOM.hintTooltip) {
+    DOM.hintTooltip.classList.remove('visible');
+    DOM.hintTooltip.textContent = '💡 Hint: ' + (q.conversionRule || q.hint);
+  }
   DOM.totalGrams.textContent = '0 ' + su;
   DOM.rightPanItems.innerHTML = '';
   DOM.correctPanItems.innerHTML = '';
@@ -991,10 +985,7 @@ function handleCorrectAnswer(q) {
   else if (State.attempts >= 3) stars = 1;
   stars = Math.max(1, stars);
 
-  State.questionStars.push(stars);
-  State.totalStars += stars;
   State.correctCount++;
-  DOM.starTotal.textContent = State.totalStars;
 
   // Visual feedback on scale
   if (State.level === 1) {
@@ -1007,6 +998,7 @@ function handleCorrectAnswer(q) {
     DOM.rulerValue.style.color = 'var(--success)';
 
     // Green fill animation up to correct value
+    DOM.rulerFill.classList.add('correct');
     DOM.rulerFill.style.transition = 'width 0.6s ease';
     DOM.rulerFill.style.width = pct + '%';
 
@@ -1066,9 +1058,14 @@ function showCorrectOnScale(q) {
     DOM.rulerCorrectMarker.style.left = pct + '%';
     DOM.rulerCorrectMarker.style.display = 'block';
 
-    // Animated green fill up to correct answer
-    DOM.rulerFill.style.transition = 'width 1.2s ease';
-    DOM.rulerFill.style.width = pct + '%';
+    // Place the wrong marker where the user's flag currently is
+    if (State.markerValue !== null) {
+      const wrongPct = ((State.markerValue - q.rulerMin) / range) * 100;
+      DOM.rulerWrongMarker.style.left = wrongPct + '%';
+      DOM.rulerWrongMarker.style.display = 'block';
+    }
+
+    // Ruler fill stays red (or original state) since answer was wrong.
 
     DOM.rulerValue.textContent = '✅ Correct: ' + formatValue(q.answer, q.scaleUnit);
     DOM.rulerValue.style.color = 'var(--success)';
@@ -1119,17 +1116,6 @@ function showFeedback(isCorrect, stars, q, isFinal = false) {
     DOM.feedbackTitle.textContent = getCorrectPhrase();
     DOM.feedbackMessage.textContent = q.explanation;
 
-    // Stars
-    DOM.feedbackStars.innerHTML = '';
-    for (let i = 0; i < 3; i++) {
-      const span = document.createElement('span');
-      span.className = `feedback-star ${i < stars ? 'earned' : 'empty'}`;
-      span.textContent = '⭐';
-      span.style.animationDelay = (i * 0.15) + 's';
-      DOM.feedbackStars.appendChild(span);
-      if (i < stars) setTimeout(() => SoundEngine.star(i), i * 150 + 300);
-    }
-
     // Show conversion rule as a bonus fact
     DOM.feedbackExplanation.style.display = 'block';
     DOM.feedbackExpText.textContent = '📐 Remember: ' + (q.conversionRule || q.explanation);
@@ -1141,8 +1127,6 @@ function showFeedback(isCorrect, stars, q, isFinal = false) {
     DOM.feedbackMessage.textContent = isFinal
       ? 'Here\'s the correct answer — study the visual!'
       : 'Try again! Check the learning visual below.';
-
-    DOM.feedbackStars.innerHTML = '';
 
     if (isFinal) {
       DOM.feedbackExplanation.style.display = 'block';
@@ -1193,7 +1177,7 @@ function resetQuestion() {
     DOM.rulerMarker.style.display = 'block';
     DOM.rulerMarker.classList.remove('snapping');
     DOM.rulerCorrectMarker.style.display = 'none';
-    DOM.rulerHint.classList.remove('visible');
+    if (DOM.hintTooltip) DOM.hintTooltip.classList.remove('visible');
     DOM.rulerFill.style.transition = 'none';
     DOM.rulerFill.style.width = '0%';
     DOM.rulerValue.textContent = '↕ Drag the marker!';
@@ -1202,7 +1186,7 @@ function resetQuestion() {
     clearWeights();
     DOM.scaleValueDisplay.textContent = 'Add weights to match!';
     DOM.scaleValueDisplay.style.color = 'var(--primary)';
-    DOM.scaleHint.classList.remove('visible');
+    if (DOM.hintTooltip) DOM.hintTooltip.classList.remove('visible');
   }
 
   DOM.scaleArea.classList.remove('glow-correct', 'shake-wrong');
@@ -1210,18 +1194,21 @@ function resetQuestion() {
   SoundEngine.click();
 }
 
-function showHint() {
+function showHint(e) {
+  if (e) e.stopPropagation();
   const q = State.questions[State.questionIndex];
   if (!q) return;
 
   State.hintUsed = true;
-  const hintText = 'Hint: ' + (q.conversionRule || q.hint);
-  if (State.level === 1) {
-    DOM.rulerHint.textContent = hintText;
-    DOM.rulerHint.classList.add('visible');
-  } else {
-    DOM.scaleHint.textContent = hintText;
-    DOM.scaleHint.classList.add('visible');
+  const hintText = '💡 Hint: ' + (q.conversionRule || q.hint);
+
+  if (DOM.hintTooltip) {
+    if (DOM.hintTooltip.classList.contains('visible')) {
+      DOM.hintTooltip.classList.remove('visible');
+    } else {
+      DOM.hintTooltip.textContent = hintText;
+      DOM.hintTooltip.classList.add('visible');
+    }
   }
   SoundEngine.click();
 }
@@ -1239,18 +1226,7 @@ function endLevel() {
 
   // Results UI
   DOM.statCorrect.textContent = correct + '/' + total;
-  DOM.statTotalStars.textContent = State.totalStars;
   DOM.statAccuracy.textContent = accuracy + '%';
-
-  // Overall stars (1-5)
-  const fullStars = Math.min(5, Math.round((State.totalStars / maxStars) * 5));
-  DOM.resultsStars.innerHTML = '';
-  for (let i = 0; i < 5; i++) {
-    const span = document.createElement('span');
-    span.className = `star ${i < fullStars ? '' : 'empty'}`;
-    span.textContent = '⭐';
-    DOM.resultsStars.appendChild(span);
-  }
 
   // Trophy
   if (accuracy >= 90) DOM.resultsTrophy.textContent = '🏆';
@@ -1337,7 +1313,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Controls
   $('btn-submit').addEventListener('click', submitAnswer);
   $('btn-reset').addEventListener('click', resetQuestion);
-  $('btn-hint').addEventListener('click', showHint);
+  DOM.btnHintToggle.addEventListener('click', showHint);
 
   // Feedback
   $('btn-next').addEventListener('click', closeFeedback);
@@ -1377,6 +1353,13 @@ document.addEventListener('DOMContentLoaded', () => {
   DOM.feedbackOverlay.addEventListener('click', (e) => {
     if (e.target === DOM.feedbackOverlay && !DOM.feedbackOverlay._isCorrect && !DOM.feedbackOverlay._isFinal) {
       DOM.feedbackOverlay.classList.remove('active');
+    }
+  });
+
+  // Close hint tooltip when clicking anywhere outside it
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.hint-wrapper') && DOM.hintTooltip) {
+      DOM.hintTooltip.classList.remove('visible');
     }
   });
 });

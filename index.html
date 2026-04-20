@@ -26,7 +26,6 @@
       <div class="character-avatar" id="welcome-avatar">🤖</div>
       <div class="character-speech">
         Hey there! I'm <strong>Scaley</strong>, your measurement buddy!
-        Pick a level and let's learn together — no boring math, just fun scales! 📏
       </div>
     </div>
 
@@ -34,16 +33,14 @@
       <div class="level-card length" id="btn-level-1" tabindex="0" role="button"
         aria-label="Start Level 1: Length Conversion">
         <span class="level-icon">📏</span>
-        <h3>Level 1</h3>
-        <p>Length Conversion</p>
+        <h3>Length Conversion</h3>
         <p style="font-size:0.82rem; color:#78909C; margin-top:4px;">mm ↔ cm ↔ m ↔ km</p>
         <span class="level-badge">🟢 Beginner Friendly</span>
       </div>
       <div class="level-card weight" id="btn-level-2" tabindex="0" role="button"
         aria-label="Start Level 2: Weight Conversion">
         <span class="level-icon">⚖️</span>
-        <h3>Level 2</h3>
-        <p>Weight Conversion</p>
+        <h3>Weight Conversion</h3>
         <p style="font-size:0.82rem; color:#78909C; margin-top:4px;">mg ↔ g ↔ kg</p>
         <span class="level-badge">🔵 Explorer</span>
       </div>
@@ -54,35 +51,21 @@
 
   <!-- ===================== GAME SCREEN ===================== -->
   <div id="game-screen" class="screen">
-    <!-- Top Bar -->
-    <div class="top-bar">
-      <div class="top-bar-left">
-        <button class="btn-back" id="btn-back-home" aria-label="Back to menu">←</button>
-        <span class="level-label" id="level-label">Level 1: Length</span>
-      </div>
-      <div class="top-bar-center">
-        <div class="progress-wrapper">
-          <div class="progress-track">
-            <div class="progress-fill" id="progress-fill" style="width:0%"></div>
-          </div>
-          <span class="progress-text" id="progress-text">1 / 8</span>
-        </div>
-      </div>
-      <div class="top-bar-right">
-        <div class="star-count">
-          <span class="star-icon">⭐</span>
-          <span id="star-total">0</span>
-        </div>
-        <div class="timer-display" id="timer-display">
+    <!-- Top Bar elements moved to activity title area -->
+
+    <!-- Main Game Area -->
+    <div class="game-main">
+      <div class="activity-header">
+        <button class="btn-back btn-back-header" id="btn-back-home" aria-label="Back to menu">←</button>
+        <div class="activity-title" id="activity-title">Length Conversion</div>
+
+        <!-- Hidden elements kept for JS compatibility -->
+        <span class="level-label" id="level-label" style="display:none;">Level 1: Length</span>
+        <div class="timer-display" id="timer-display" style="display:none;">
           <span>⏱</span>
           <span id="timer-value">60</span>
         </div>
       </div>
-    </div>
-
-    <!-- Main Game Area -->
-    <div class="game-main">
-      <div class="activity-title" id="activity-title">Length Conversion</div>
 
       <!-- Question Panel -->
       <div class="question-panel" id="question-panel">
@@ -95,6 +78,10 @@
 
       <!-- Scale Area -->
       <div class="scale-area" id="scale-area">
+        <div class="hint-wrapper">
+          <button id="btn-hint-toggle" class="hint-toggle-btn" aria-label="Toggle Hint" title="Hint">💡</button>
+          <div id="hint-tooltip" class="hint-tooltip"></div>
+        </div>
 
         <!-- RULER (Level 1) -->
         <div class="ruler-container" id="ruler-container" style="display:none;">
@@ -108,17 +95,16 @@
                 <div class="ruler-marker-pole"></div>
                 <div class="ruler-marker-point"></div>
               </div>
+              <div class="ruler-wrong-marker" id="ruler-wrong-marker"></div>
               <div class="ruler-correct-marker" id="ruler-correct-marker"></div>
             </div>
           </div>
           <div class="ruler-unit-label" id="ruler-unit-label">📏 Scale: centimeters (cm)</div>
-          <div class="ruler-hint" id="ruler-hint"></div>
         </div>
 
         <!-- BALANCE SCALE (Level 2) -->
         <div class="scale-container" id="scale-container" style="display:none;">
           <div class="scale-value-display" id="scale-value-display">Add weights to the scale!</div>
-          <div class="scale-hint" id="scale-hint"></div>
           <div class="balance-scale" id="balance-scale">
             <!-- Stand -->
             <div class="scale-stand">
@@ -183,7 +169,6 @@
         <!-- Controls -->
         <div class="controls-bar">
           <button class="btn btn-reset" id="btn-reset">🔄 Reset</button>
-          <button class="btn btn-hint" id="btn-hint" style="display:none;">💡 Hint</button>
           <button class="btn btn-undo" id="btn-undo-weight" style="display:none;">↩ Undo</button>
           <button class="btn btn-submit" id="btn-submit">✅ Submit</button>
         </div>
@@ -204,7 +189,6 @@
       <span class="feedback-icon" id="feedback-icon">🎉</span>
       <h3 id="feedback-title">Awesome!</h3>
       <p id="feedback-message">You got it right!</p>
-      <div class="feedback-stars" id="feedback-stars"></div>
       <div class="feedback-explanation" id="feedback-explanation" style="display:none;">
         <div class="exp-title">💡 Quick Tip</div>
         <div class="exp-text" id="feedback-exp-text"></div>
@@ -226,16 +210,10 @@
           <div class="stat-label">Correct</div>
         </div>
         <div class="stat-item">
-          <div class="stat-value" id="stat-total-stars">0</div>
-          <div class="stat-label">Stars</div>
-        </div>
-        <div class="stat-item">
           <div class="stat-value" id="stat-accuracy">0%</div>
           <div class="stat-label">Accuracy</div>
         </div>
       </div>
-
-      <div class="results-stars" id="results-stars"></div>
 
       <div class="badges-section" id="badges-section">
         <h4>🎖️ Badges Earned</h4>
