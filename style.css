@@ -1130,13 +1130,6 @@ body::after {
   transform: translateY(-2px);
 }
 
-.btn-clear {
-  background: var(--error-light);
-  color: var(--error);
-  font-weight: 800;
-}
-.btn-clear:hover { transform: translateY(-2px); }
-
 /* ==========================================
    FEEDBACK OVERLAY
    ========================================== */

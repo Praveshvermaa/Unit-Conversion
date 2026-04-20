@@ -581,9 +581,9 @@ function startLevel(level) {
   DOM.gameScreen.className = `screen active ${level === 2 ? 'level-2' : ''}`;
   DOM.levelLabel.textContent = level === 1 ? 'Level 1: Length' : 'Level 2: Weight';
 
-  // Show/hide clear button
-  const clearBtn = $('btn-clear-weights');
-  if (clearBtn) clearBtn.style.display = level === 2 ? '' : 'none';
+  // Show/hide weight controls
+  const undoBtn = $('btn-undo-weight');
+  if (undoBtn) undoBtn.style.display = level === 2 ? '' : 'none';
 
   if (level === 1) {
     DOM.rulerContainer.style.display = 'flex';
@@ -1290,12 +1290,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const w = parseInt(chip.dataset.weight);
       addWeight(w);
     });
-  });
-
-  // Clear weights button
-  $('btn-clear-weights').addEventListener('click', () => {
-    clearWeights();
-    DOM.scaleValueDisplay.textContent = 'Add weights to match!';
   });
 
   // Undo last weight
