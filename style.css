@@ -417,6 +417,7 @@ body::after {
 
 #game-screen.level-2 {
   background: linear-gradient(170deg, var(--bg-lavender) 0%, var(--bg-sky) 100%);
+  touch-action: none;
 }
 
 /* Top Bar */
@@ -1080,6 +1081,7 @@ body::after {
   gap: 16px;
   position: relative;
   z-index: 1;
+  touch-action: none;
 }
 
 .scale-value-display {
@@ -1319,6 +1321,7 @@ body::after {
   background: #F5F5F5;
   border-radius: var(--radius-md);
   border: 2px dashed #E0E0E0;
+  touch-action: none;
 }
 
 .weight-chip {
@@ -1334,6 +1337,7 @@ body::after {
   transition: all var(--transition-fast);
   user-select: none;
   -webkit-user-select: none;
+  touch-action: none;
 }
 
 .weight-chip:hover {
@@ -1380,26 +1384,6 @@ body::after {
   border-color: #EF9A9A;
 }
 
-/* Scale total display */
-.scale-total {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.6rem;
-  color: var(--primary);
-  background: var(--card-bg);
-  padding: 8px 20px;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.scale-total .total-label {
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-medium);
-}
 
 /* ==========================================
    CONTROLS BAR

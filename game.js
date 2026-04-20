@@ -519,7 +519,6 @@ const DOM = {
   rightPanItems: $('right-pan-items'),
   correctPanItems: $('correct-pan-items'),
   rightPanLabel: $('right-pan-label'),
-  totalGrams: $('total-grams'),
   weightChips: $('weight-chips'),
   leftPan: $('left-pan'),
   rightPan: $('right-pan'),
@@ -816,7 +815,6 @@ function setupScale(q) {
     DOM.hintTooltip.classList.remove('visible');
     DOM.hintTooltip.textContent = '💡 Hint: ' + (q.conversionRule || q.hint);
   }
-  DOM.totalGrams.textContent = '0 ' + su;
   DOM.rightPanItems.innerHTML = '';
   DOM.correctPanItems.innerHTML = '';
   DOM.correctPanItems.classList.remove('visible');
@@ -861,7 +859,6 @@ function updateWeightUI() {
   const q = State.questions[State.questionIndex];
   const su = q ? (q.scaleUnit || 'g') : 'g';
 
-  DOM.totalGrams.textContent = State.totalWeight + ' ' + su;
   DOM.rightPanLabel.textContent = 'Your weights: ' + State.totalWeight + ' ' + su;
   DOM.correctPanItems.innerHTML = '';
   DOM.correctPanItems.classList.remove('visible');
@@ -1028,22 +1025,12 @@ function handleWrongAnswer(q, playerAnswer) {
   if (State.level === 1) {
     DOM.rulerTrack.classList.add('shake-wrong');
     setTimeout(() => DOM.rulerTrack.classList.remove('shake-wrong'), 500);
-    DOM.rulerValue.textContent = '❌ ' + formatValue(playerAnswer, q.scaleUnit) + ' — not quite!';
+    DOM.rulerValue.textContent = '❌ Wrong answer';
     DOM.rulerValue.style.color = 'var(--error)';
+    showCorrectOnScale(q);
   } else {
     DOM.scaleContainer.classList.add('shake-wrong');
     setTimeout(() => DOM.scaleContainer.classList.remove('shake-wrong'), 500);
-    DOM.scaleValueDisplay.textContent = '❌ ' + playerAnswer + ' ' + q.scaleUnit + ' — not quite!';
-    DOM.scaleValueDisplay.style.color = 'var(--error)';
-  }
-
-  // Highlight the correct answer on the scale visually
-  showCorrectOnScale(q);
-
-  if (State.level === 1) {
-    DOM.rulerValue.textContent = '❌ Wrong answer';
-    DOM.rulerValue.style.color = 'var(--error)';
-  } else {
     DOM.scaleValueDisplay.textContent = '❌ Wrong answer';
     DOM.scaleValueDisplay.style.color = 'var(--error)';
   }
