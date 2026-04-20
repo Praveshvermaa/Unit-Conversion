@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Interactive unit conversion learning game with visual scales for students. Learn length and weight conversions through play!">
+  <title>Scale Quest — Unit Conversion Game</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ===================== CONFETTI CANVAS ===================== -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- ===================== WELCOME SCREEN ===================== -->
+  <div id="welcome-screen" class="screen active">
+    <div class="game-title">
+      <h1>⚖️ Scale Quest</h1>
+      <p>Learn Unit Conversions by Playing!</p>
+    </div>
+
+    <div class="welcome-character">
+      <div class="character-avatar" id="welcome-avatar">🤖</div>
+      <div class="character-speech">
+        Hey there! I'm <strong>Scaley</strong>, your measurement buddy!
+        Pick a level and let's learn together — no boring math, just fun scales! 📏
+      </div>
+    </div>
+
+    <div class="level-cards">
+      <div class="level-card length" id="btn-level-1" tabindex="0" role="button"
+        aria-label="Start Level 1: Length Conversion">
+        <span class="level-icon">📏</span>
+        <h3>Level 1</h3>
+        <p>Length Conversion</p>
+        <p style="font-size:0.82rem; color:#78909C; margin-top:4px;">mm ↔ cm ↔ m ↔ km</p>
+        <span class="level-badge">🟢 Beginner Friendly</span>
+      </div>
+      <div class="level-card weight" id="btn-level-2" tabindex="0" role="button"
+        aria-label="Start Level 2: Weight Conversion">
+        <span class="level-icon">⚖️</span>
+        <h3>Level 2</h3>
+        <p>Weight Conversion</p>
+        <p style="font-size:0.82rem; color:#78909C; margin-top:4px;">mg ↔ g ↔ kg</p>
+        <span class="level-badge">🔵 Explorer</span>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- ===================== GAME SCREEN ===================== -->
+  <div id="game-screen" class="screen">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <button class="btn-back" id="btn-back-home" aria-label="Back to menu">←</button>
+        <span class="level-label" id="level-label">Level 1: Length</span>
+      </div>
+      <div class="top-bar-center">
+        <div class="progress-wrapper">
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+          </div>
+          <span class="progress-text" id="progress-text">1 / 8</span>
+        </div>
+      </div>
+      <div class="top-bar-right">
+        <div class="star-count">
+          <span class="star-icon">⭐</span>
+          <span id="star-total">0</span>
+        </div>
+        <div class="timer-display" id="timer-display">
+          <span>⏱</span>
+          <span id="timer-value">60</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Game Area -->
+    <div class="game-main">
+      <!-- Question Panel -->
+      <div class="question-panel" id="question-panel">
+        <div class="guide-avatar" id="guide-avatar">🤖</div>
+        <div class="question-content">
+          <h2 id="question-text">Loading question...</h2>
+        </div>
+        <span class="difficulty-badge" id="difficulty-badge">Easy</span>
+      </div>
+
+      <!-- Instruction Section -->
+      <div class="question-instructions" id="question-instructions">
+        <div class="instruction-badge">Step 1: mark right answer</div>
+        <div class="instruction-badge">Step 2: click on submit</div>
+      </div>
+
+      <!-- Scale Area -->
+      <div class="scale-area" id="scale-area">
+
+        <!-- RULER (Level 1) -->
+        <div class="ruler-container" id="ruler-container" style="display:none;">
+          <div class="ruler-value-display" id="ruler-value">↕ Drag the marker!</div>
+          <div class="ruler-track-wrapper">
+            <div class="ruler-track" id="ruler-track">
+              <div class="ruler-fill" id="ruler-fill"></div>
+              <div class="ruler-ticks" id="ruler-ticks"></div>
+              <div class="ruler-marker" id="ruler-marker" style="display:none;">
+                <div class="ruler-marker-flag">🚩</div>
+                <div class="ruler-marker-pole"></div>
+                <div class="ruler-marker-point"></div>
+              </div>
+              <div class="ruler-correct-marker" id="ruler-correct-marker"></div>
+            </div>
+          </div>
+          <div class="ruler-unit-label" id="ruler-unit-label">📏 Scale: centimeters (cm)</div>
+        </div>
+
+        <!-- BALANCE SCALE (Level 2) -->
+        <div class="scale-container" id="scale-container" style="display:none;">
+          <div class="scale-value-display" id="scale-value-display">Add weights to the scale!</div>
+          <div class="balance-scale" id="balance-scale">
+            <!-- Stand -->
+            <div class="scale-stand">
+              <div class="scale-pivot"></div>
+              <div class="scale-pillar"></div>
+              <div class="scale-base"></div>
+            </div>
+            <!-- Beam -->
+            <div class="scale-beam" id="scale-beam"></div>
+            <!-- Left Pan (target) -->
+            <div class="scale-pan left-pan" id="left-pan">
+              <div class="pan-string"></div>
+              <div class="pan-dish">
+                <div class="pan-items" id="left-pan-items"></div>
+                <div class="pan-label" id="left-pan-label">Target</div>
+              </div>
+            </div>
+            <!-- Right Pan (player) -->
+            <div class="scale-pan right-pan" id="right-pan">
+              <div class="pan-string"></div>
+              <div class="pan-dish">
+                <div class="pan-items" id="right-pan-items"></div>
+                <div class="pan-label" id="right-pan-label">Your weights: 0 g</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="scale-total">
+            <span class="total-label">Your total:</span>
+            <span id="total-grams">0 g</span>
+          </div>
+
+          <div class="weight-chips" id="weight-chips">
+            <div class="weight-chip chip-1g" data-weight="1">
+              <span class="chip-icon">🪙</span>
+              <span class="chip-value">1 g</span>
+            </div>
+            <div class="weight-chip chip-5g" data-weight="5">
+              <span class="chip-icon">🫘</span>
+              <span class="chip-value">5 g</span>
+            </div>
+            <div class="weight-chip chip-10g" data-weight="10">
+              <span class="chip-icon">🍬</span>
+              <span class="chip-value">10 g</span>
+            </div>
+            <div class="weight-chip chip-50g" data-weight="50">
+              <span class="chip-icon">🍎</span>
+              <span class="chip-value">50 g</span>
+            </div>
+            <div class="weight-chip chip-100g" data-weight="100">
+              <span class="chip-icon">🧱</span>
+              <span class="chip-value">100 g</span>
+            </div>
+            <div class="weight-chip chip-500g" data-weight="500">
+              <span class="chip-icon">🏋️</span>
+              <span class="chip-value">500 g</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-bar">
+          <button class="btn btn-reset" id="btn-reset">🔄 Reset</button>
+          <button class="btn btn-undo" id="btn-undo-weight" style="display:none;">↩ Undo</button>
+          <button class="btn btn-clear" id="btn-clear-weights" style="display:none;">🗑️ Clear All</button>
+          <button class="btn btn-submit" id="btn-submit">✅ Submit</button>
+        </div>
+      </div>
+
+      <!-- Learning Panel (after wrong answers) -->
+      <div class="learning-panel" id="learning-panel">
+        <div class="learn-title"><span class="learn-icon">💡</span> Did you know?</div>
+        <div class="learn-text" id="learn-text"></div>
+        <div class="learn-visual" id="learn-visual"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== FEEDBACK OVERLAY ===================== -->
+  <div class="feedback-overlay" id="feedback-overlay">
+    <div class="feedback-card" id="feedback-card">
+      <span class="feedback-icon" id="feedback-icon">🎉</span>
+      <h3 id="feedback-title">Awesome!</h3>
+      <p id="feedback-message">You got it right!</p>
+      <div class="feedback-stars" id="feedback-stars"></div>
+      <div class="feedback-explanation" id="feedback-explanation" style="display:none;">
+        <div class="exp-title">💡 Quick Tip</div>
+        <div class="exp-text" id="feedback-exp-text"></div>
+      </div>
+      <button class="btn-next" id="btn-next">Next →</button>
+    </div>
+  </div>
+
+  <!-- ===================== RESULTS SCREEN ===================== -->
+  <div id="results-screen" class="screen">
+    <div class="results-card">
+      <span class="results-trophy" id="results-trophy">🏆</span>
+      <h2 id="results-title">Level Complete!</h2>
+      <p class="results-subtitle" id="results-subtitle">Amazing work!</p>
+
+      <div class="results-stats">
+        <div class="stat-item">
+          <div class="stat-value" id="stat-correct">0</div>
+          <div class="stat-label">Correct</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="stat-total-stars">0</div>
+          <div class="stat-label">Stars</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="stat-accuracy">0%</div>
+          <div class="stat-label">Accuracy</div>
+        </div>
+      </div>
+
+      <div class="results-stars" id="results-stars"></div>
+
+      <div class="badges-section" id="badges-section">
+        <h4>🎖️ Badges Earned</h4>
+        <div class="badges-grid" id="badges-grid"></div>
+      </div>
+    </div>
+
+    <div class="results-actions">
+      <button class="btn-play-again" id="btn-play-again">🔄 Play Again</button>
+      <button class="btn-home" id="btn-home">🏠 Home</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+
+</html>
