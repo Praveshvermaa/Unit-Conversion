@@ -652,6 +652,7 @@ function setupRuler(q) {
   DOM.rulerFill.style.transition = 'none';
   DOM.rulerValue.textContent = '↕ Drag the marker!';
   DOM.rulerValue.style.color = 'var(--primary)';
+  DOM.rulerValue.style.fontSize = '';
 
   const range = q.rulerMax - q.rulerMin;
   const step = q.rulerStep;
@@ -756,6 +757,7 @@ function setupRuler(q) {
     // Show value with scale unit
     DOM.rulerValue.textContent = formatValue(val, q.scaleUnit);
     DOM.rulerValue.style.color = 'var(--primary)';
+    DOM.rulerValue.style.fontSize = '';
 
     SoundEngine.tick();
   }
@@ -811,6 +813,7 @@ function setupScale(q) {
 
   DOM.scaleValueDisplay.textContent = 'Add weights to match!';
   DOM.scaleValueDisplay.style.color = 'var(--primary)';
+  DOM.scaleValueDisplay.style.fontSize = '';
   if (DOM.hintTooltip) {
     DOM.hintTooltip.classList.remove('visible');
     DOM.hintTooltip.textContent = '💡 Hint: ' + (q.conversionRule || q.hint);
@@ -864,6 +867,7 @@ function updateWeightUI() {
   DOM.correctPanItems.classList.remove('visible');
   DOM.rightPan.classList.remove('show-correct');
   DOM.scaleValueDisplay.style.color = 'var(--primary)';
+  DOM.scaleValueDisplay.style.fontSize = '';
   DOM.scaleValueDisplay.textContent = State.totalWeight > 0
     ? State.totalWeight + ' ' + su
     : 'Add weights to match!';
@@ -993,6 +997,7 @@ function handleCorrectAnswer(q) {
     DOM.rulerMarker.style.left = pct + '%';
     DOM.rulerValue.textContent = '✅ ' + formatValue(q.answer, q.scaleUnit);
     DOM.rulerValue.style.color = 'var(--success)';
+    DOM.rulerValue.style.fontSize = '';
 
     // Green fill animation up to correct value
     DOM.rulerFill.classList.add('correct');
@@ -1004,6 +1009,7 @@ function handleCorrectAnswer(q) {
   } else {
     DOM.scaleValueDisplay.textContent = '✅ ' + q.answer + ' ' + q.scaleUnit + ' — Balanced!';
     DOM.scaleValueDisplay.style.color = 'var(--success)';
+    DOM.scaleValueDisplay.style.fontSize = '';
     DOM.scaleBeam.style.transform = 'translateX(-50%) rotate(0deg)';
     DOM.leftPan.style.transform = 'translateY(0) rotate(0deg)';
     DOM.rightPan.style.transform = 'translateY(0) rotate(0deg)';
@@ -1025,14 +1031,21 @@ function handleWrongAnswer(q, playerAnswer) {
   if (State.level === 1) {
     DOM.rulerTrack.classList.add('shake-wrong');
     setTimeout(() => DOM.rulerTrack.classList.remove('shake-wrong'), 500);
-    DOM.rulerValue.textContent = '❌ Wrong answer';
-    DOM.rulerValue.style.color = 'var(--error)';
     showCorrectOnScale(q);
+    DOM.rulerValue.textContent = '❌ Wrong answer, Try again!';
+    DOM.rulerValue.style.color = 'var(--error)';
+    DOM.rulerValue.style.fontSize = '1.4rem';
   } else {
     DOM.scaleContainer.classList.add('shake-wrong');
     setTimeout(() => DOM.scaleContainer.classList.remove('shake-wrong'), 500);
-    DOM.scaleValueDisplay.textContent = '❌ Wrong answer';
+    
+    let inlineMsg = 'Wrong answer, Try again!';
+    if (playerAnswer > q.answer) inlineMsg = 'Extra weight, Try again!';
+    else if (playerAnswer < q.answer) inlineMsg = 'Less weight, Try again!';
+    
+    DOM.scaleValueDisplay.textContent = '❌ ' + inlineMsg;
     DOM.scaleValueDisplay.style.color = 'var(--error)';
+    DOM.scaleValueDisplay.style.fontSize = '1.4rem';
   }
 }
 
@@ -1164,15 +1177,18 @@ function resetQuestion() {
     DOM.rulerMarker.style.display = 'block';
     DOM.rulerMarker.classList.remove('snapping');
     DOM.rulerCorrectMarker.style.display = 'none';
+    DOM.rulerWrongMarker.style.display = 'none';
     if (DOM.hintTooltip) DOM.hintTooltip.classList.remove('visible');
     DOM.rulerFill.style.transition = 'none';
     DOM.rulerFill.style.width = '0%';
     DOM.rulerValue.textContent = '↕ Drag the marker!';
     DOM.rulerValue.style.color = 'var(--primary)';
+    DOM.rulerValue.style.fontSize = '';
   } else {
     clearWeights();
     DOM.scaleValueDisplay.textContent = 'Add weights to match!';
     DOM.scaleValueDisplay.style.color = 'var(--primary)';
+    DOM.scaleValueDisplay.style.fontSize = '';
     if (DOM.hintTooltip) DOM.hintTooltip.classList.remove('visible');
   }
 
